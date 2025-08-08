@@ -1,0 +1,16 @@
+# editors
+.idea/
+.vscode/
+# rust
+/target/
+/Cargo.lock
+# foundry
+out/
+/cache/
+/lib/
+# node
+node_modules/
+/dist/
+# misc
+.env*
+*.log
