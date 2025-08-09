@@ -1,0 +1,15 @@
+[Unit]
+Description=Anvil fork daemon (Arbitrum)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+ExecStart=/usr/local/bin/fork_daemon.sh
+Restart=always
+RestartSec=5
+EnvironmentFile=/etc/default/anvil  # holds QUICKNODE_RPC & ANVIL_PORT
+LimitNOFILE=100000
+
+[Install]
+WantedBy=multi-user.target

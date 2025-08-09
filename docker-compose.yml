@@ -1,0 +1,55 @@
+
+services:
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:nightly
+    command: >
+      anvil
+        --fork-url ${QUICKNODE_RPC}
+        --fork-block-number latest-2
+        --host 0.0.0.0 --port 8545
+        --state-cache-path /mnt/anvil-fork
+        --no-mining
+    ports: ["8545:8545"]
+    tmpfs:
+      - /mnt/anvil-fork:size=512m
+    healthcheck:
+      test: ["CMD-SHELL", "cast block-number --rpc-url http://localhost:8545 > /dev/null"]
+      interval: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    volumes: ["redis-data:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+
+  bot:
+    build:
+      context: .
+      dockerfile: rust/executor/Dockerfile
+    environment:
+      RUST_LOG: info
+      RPC_URL: http://anvil:8545
+    depends_on:
+      anvil:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./config:/app/config:ro
+    ports: ["9000:9000"] # optional HTTP metrics
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 10s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana-oss:10.4.2
+    ports: ["3000:3000"]
+    volumes: ["grafana-data:/var/lib/grafana"]
+
+volumes:
+  redis-data:
+  grafana-data:

@@ -1,16 +1,55 @@
 # editors
 .idea/
 .vscode/
+*.sublime-*
+*.swp
+*.swo
+
 # rust
 /target/
 /Cargo.lock
+**/*.rs.bk
+
 # foundry
 out/
 /cache/
 /lib/
+artifacts/
+forge-cache/
+
 # node
 node_modules/
 /dist/
-# misc
+/.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# security & secrets
 .env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.secret
+**/secrets.*
+**/private*
+**/id_rsa*
+**/*.pem
+**/*.key
+**/*.der
+**/*.p12
+**/*.pfx
+mnemonic.txt
+*_private.*
+
+# misc
 *.log
+.DS_Store
+coverage/
+.coverage
+coverage.json
+.vercel
+.next/
